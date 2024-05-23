@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ToDoEditDialog extends StatefulWidget {
-  const ToDoEditDialog({super.key});
+  final String name;
+  final String time;
+  ToDoEditDialog({required this.name, required this.time, super.key});
 
   @override
   State<ToDoEditDialog> createState() => _ToDoEditDialogState();
@@ -30,6 +32,7 @@ class _ToDoEditDialogState extends State<ToDoEditDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
+              initialValue: widget.name,
               textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -47,6 +50,7 @@ class _ToDoEditDialogState extends State<ToDoEditDialog> {
             ),
             const SizedBox(height: 10),
             TextFormField(
+              initialValue: widget.time,
               textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),

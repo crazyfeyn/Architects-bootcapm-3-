@@ -16,4 +16,8 @@ class ToDosController {
     list[index].name = data['editedName']!;
     list[index].time = data['editedTime']!;
   }
+
+   void delete(int index) {
+    list.removeAt(index);
+  }
 }

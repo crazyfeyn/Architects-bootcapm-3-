@@ -7,11 +7,13 @@ class ToDoItem extends StatelessWidget {
   final Function toggleDone;
   final int index;
   final Function editToDo;
+  final Function() onDelete;
   const ToDoItem(
       {required this.toDo,
       required this.toggleDone,
       required this.index,
       required this.editToDo,
+      required this.onDelete,
       super.key});
 
   @override
@@ -35,20 +37,32 @@ class ToDoItem extends StatelessWidget {
             : Icons.check_box_outline_blank),
         color: Colors.green,
       ),
-      trailing: IconButton(
-        onPressed: () async {
-          Map<String, String>? data = await showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (ctx) {
-                return const ToDoEditDialog();
-              });
-          if (data != null) {
-            editToDo(index, data);
-          }
-        },
-        icon: const Icon(Icons.edit),
-        color: Colors.blue,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            onPressed: () async {
+              Map<String, String>? data = await showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (ctx) {
+                    return ToDoEditDialog(name: toDo.name, time: toDo.time);
+                  });
+              if (data != null) {
+                editToDo(index, data);
+              }
+            },
+            icon: const Icon(Icons.edit),
+            color: Colors.blue,
+          ),
+          IconButton(
+            onPressed: () {
+              onDelete();
+            },
+            icon: Icon(Icons.delete),
+            color: Colors.red,
+          ),
+        ],
       ),
     );
   }

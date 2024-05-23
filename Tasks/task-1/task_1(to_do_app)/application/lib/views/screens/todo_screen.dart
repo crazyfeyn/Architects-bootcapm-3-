@@ -13,7 +13,6 @@ class ToDoScreen extends StatefulWidget {
 }
 
 final ToDosController _toDosController = ToDosController();
-// late Map<String, String> data =
 
 class _ToDoScreenState extends State<ToDoScreen> {
   void toggleDone(int index) {
@@ -25,6 +24,11 @@ class _ToDoScreenState extends State<ToDoScreen> {
 
   void editToDo(int index, Map<String, String> data) {
     _toDosController.editToDo(index, data);
+    setState(() {});
+  }
+
+   void delete(int index) {
+    _toDosController.delete(index);
     setState(() {});
   }
 
@@ -42,6 +46,7 @@ class _ToDoScreenState extends State<ToDoScreen> {
               toggleDone: () => toggleDone(index),
               index: index,
               editToDo: editToDo,
+              onDelete: () => delete(index),
             );
           })),
       floatingActionButton: FloatingActionButton(
