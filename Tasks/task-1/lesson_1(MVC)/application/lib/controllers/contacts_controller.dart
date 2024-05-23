@@ -18,9 +18,9 @@ class ContactsController {
     _list.removeAt(index);
   }
 
-  void edit(int index, Map<String, String> data) {
-    _list[index].name = data['name']!;
-    _list[index].phone = data['phone']!;
+   void editToDo(int index, Map<String, String> data) {
+    list[index].name = data['editedName']!;
+    list[index].phone = data['editedPhone']!;
   }
 
   void add(String name, String phone) {

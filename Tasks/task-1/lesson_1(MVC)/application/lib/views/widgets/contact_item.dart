@@ -1,18 +1,20 @@
 import 'package:application/models/contact.dart';
 import 'package:application/views/widgets/contact_edit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ContactItem extends StatelessWidget {
   final Contact contact;
   final Function onDelete;
   final int index;
+  final Function editToDo;
+
 
   const ContactItem(
     this.contact, {
     super.key,
     required this.onDelete,
     required this.index,
+    required this.editToDo
   });
 
   @override
@@ -30,12 +32,21 @@ class ContactItem extends StatelessWidget {
         children: [
           IconButton(
               onPressed: () {
-                showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (ctx) {
-                      return ContactEdit(index: index);
-                    });
+                IconButton(
+        onPressed: () async {
+          Map<String, String>? data = await showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (ctx) {
+                return const EditContact();
+              });
+          if (data != null) {
+            editToDo(index, data);
+          }
+        },
+        icon: const Icon(Icons.edit),
+        color: Colors.blue
+      );
               },
               icon: const Icon(
                 Icons.edit,

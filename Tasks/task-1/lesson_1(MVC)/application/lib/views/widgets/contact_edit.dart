@@ -1,38 +1,29 @@
-import 'package:application/controllers/contacts_controller.dart';
 import 'package:flutter/material.dart';
 
-class ContactEdit extends StatefulWidget {
-  final int index;
-  const ContactEdit({required this.index, super.key});
+class EditContact extends StatefulWidget {
+  const EditContact({super.key});
 
   @override
-  State<ContactEdit> createState() => _ContactEditState();
+  State<EditContact> createState() => _EditContactState();
 }
 
-class _ContactEditState extends State<ContactEdit> {
-
+class _EditContactState extends State<EditContact> {
   final _formKey = GlobalKey<FormState>();
-  final ContactsController _contactsController = ContactsController();
+  late String editedName = "";
+  late String editedTime = "";
 
-  String editedName = "";
-
-  String editedPhone = "";
-
-  void _edit() {
+  void _editNow() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-
-      setState(() {
-        _contactsController
-            .edit(widget.index, {'name': editedName, 'phone': editedName});
-      });
+      Navigator.pop(
+          context, {'editedName': editedName, 'editedTime': editedTime});
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Add contact"),
+      title: const Text('Add a new task'),
       content: Form(
         key: _formKey,
         child: Column(
@@ -42,11 +33,11 @@ class _ContactEditState extends State<ContactEdit> {
               textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Name',
+                labelText: 'New to do task name',
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'please enter your name';
+                  return 'please enter your to do task please';
                 }
                 return null;
               },
@@ -56,23 +47,19 @@ class _ContactEditState extends State<ContactEdit> {
             ),
             const SizedBox(height: 10),
             TextFormField(
-              keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.add),
                 border: OutlineInputBorder(),
-                labelText: 'Phone number',
+                labelText: 'New time to do it',
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'please enter your name';
-                } else if (!RegExp(r"^\d+$").hasMatch(value)) {
-                  return 'please modify you number as corrected';
+                  return 'please enter your to do time please';
                 }
                 return null;
               },
               onSaved: (newValue) {
-                editedPhone = newValue ?? "";
+                editedTime = newValue ?? "";
               },
             ),
           ],
@@ -86,7 +73,7 @@ class _ContactEditState extends State<ContactEdit> {
             child: const Text("Cancel")),
         ElevatedButton(
             onPressed: () {
-              _edit();
+              _editNow();
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue, foregroundColor: Colors.white),

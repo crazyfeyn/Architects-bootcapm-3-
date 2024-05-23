@@ -19,12 +19,12 @@ class _ContactScreenState extends State<ContactScreen> {
     setState(() {});
   }
 
-  Map<String, String>? data;
+  void editContact(int index, Map<String, String> data) {
+    _contactsController.editToDo(index, data);
+    setState(() {});
+  }
 
-  // void edit(int index) {
-  //   _contactsController.edit(index);
-  //   setState(() {});
-  // }
+  Map<String, String>? data;
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +53,12 @@ class _ContactScreenState extends State<ContactScreen> {
       body: ListView.builder(
           itemCount: _contactsController.list.length,
           itemBuilder: (ctx, index) {
-            return ContactItem(_contactsController.list[index],
-                onDelete: () => delete(index), index: index,);
+            return ContactItem(
+              _contactsController.list[index],
+              editToDo: editContact,
+              onDelete: () => delete(index),
+              index: index,
+            );
           }),
     );
   }
