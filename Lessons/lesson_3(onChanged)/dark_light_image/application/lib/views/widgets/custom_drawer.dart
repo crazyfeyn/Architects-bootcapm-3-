@@ -24,7 +24,7 @@ class CustomDrawer extends StatelessWidget {
         children: [
           AppBar(
             automaticallyImplyLeading: false,
-            title: Text('Menu'),
+            title: Text('Menu', style: TextStyle(fontSize: AppConstants.textSize)),
           ),
           ListTile(
             onTap: () {
@@ -37,7 +37,7 @@ class CustomDrawer extends StatelessWidget {
                       )));
             },
             leading: const Icon(Icons.home),
-            title: const Text("Main Screen"),
+            title:  Text("Main Screen", style: TextStyle(fontSize: AppConstants.textSize)),
             trailing: const Icon(
               Icons.chevron_right_rounded,
             ),
@@ -53,7 +53,7 @@ class CustomDrawer extends StatelessWidget {
                       )));
             },
             leading: const Icon(Icons.settings),
-            title: const Text("Settings"),
+            title: Text("Settings", style: TextStyle(fontSize: AppConstants.textSize)),
             trailing: const Icon(
               Icons.chevron_right_rounded,
             ),

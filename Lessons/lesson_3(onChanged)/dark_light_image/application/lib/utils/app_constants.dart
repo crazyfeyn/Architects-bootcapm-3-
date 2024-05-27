@@ -6,4 +6,5 @@ class AppConstants {
   static String passwrod = "";
   static Color appBarColor = Colors.amber;
   static Color drawerColor = Colors.amber;
+  static double textSize = 14;
 }

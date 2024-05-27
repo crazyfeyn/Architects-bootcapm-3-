@@ -7,13 +7,13 @@ class SettingsScreen extends StatefulWidget {
   final ValueChanged<String> onBackgroundChanged;
   final changeDrawerColor;
   final changeAppBarColor;
-  const SettingsScreen(
-      {super.key,
-      required this.onThemeModeChanged,
-      required this.onBackgroundChanged,
-      required this.changeAppBarColor,
-      required this.changeDrawerColor,
-      });
+  const SettingsScreen({
+    super.key,
+    required this.onThemeModeChanged,
+    required this.onBackgroundChanged,
+    required this.changeAppBarColor,
+    required this.changeDrawerColor,
+  });
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -36,7 +36,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings screen'),
+        title: Text(
+          'Settings screen',
+          style: TextStyle(fontSize: AppConstants.textSize),
+        ),
       ),
       drawer: CustomDrawer(
         onThemeModeChanged: widget.onThemeModeChanged,
@@ -50,7 +53,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             image: AppConstants.backgroundImageUrl.isEmpty
                 ? null
                 : DecorationImage(
-                    image: NetworkImage(AppConstants.backgroundImageUrl))),
+                    image: NetworkImage(AppConstants.backgroundImageUrl),
+                    fit: BoxFit.cover)),
         child: Column(
           children: [
             SwitchListTile(
@@ -58,16 +62,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onChanged: (value) {
                 widget.onThemeModeChanged(value);
               },
-              title: const Text("Tungi holat"),
+
+
+
+
+
+              title: Text(
+                "Tungi holat",
+                style: TextStyle(fontSize: AppConstants.textSize),
+              ),
             ),
             Form(
                 key: _formKey,
                 child: TextFormField(
                   controller: controller,
                   decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
+                      border: OutlineInputBorder(),
                       hintText: 'url',
                       labelText: 'url',
+                      labelStyle: TextStyle(fontSize: AppConstants.textSize),
+                      hintStyle: TextStyle(fontSize: AppConstants.textSize),
                       suffixIcon: IconButton(
                           onPressed: () {
                             if (controller.text.trim().isNotEmpty) {
@@ -80,6 +94,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             TextFormField(
               controller: newPasswordController,
               decoration: InputDecoration(
+                  labelStyle: TextStyle(fontSize: AppConstants.textSize),
+                  hintStyle: TextStyle(fontSize: AppConstants.textSize),
                   border: const OutlineInputBorder(),
                   hintText: 'new password',
                   labelText: 'new password',
@@ -102,9 +118,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     BoxDecoration(border: Border.all(color: Colors.black)),
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
-                child: const Text(
+                child: Text(
                   'change appbars colors',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(
+                      color: Colors.black, fontSize: AppConstants.textSize),
                 ),
               ),
             ),
@@ -117,12 +134,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     BoxDecoration(border: Border.all(color: Colors.black)),
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
-                child: const Text(
+                child: Text(
                   'change drawers colors',
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(
+                      color: Colors.black, fontSize: AppConstants.textSize),
                 ),
               ),
-            )
+            ),
+            Slider(
+                value: AppConstants.textSize,
+                min: 10,
+                max: 25,
+                divisions: 15,
+                label: AppConstants.textSize.toString(),
+                onChanged: (double value) {
+                  setState(() {
+                    AppConstants.textSize = value;
+                  });
+                })
           ],
         ),
       ),

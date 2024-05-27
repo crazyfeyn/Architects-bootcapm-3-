@@ -31,13 +31,14 @@ class _PasswrodScreenState extends State<PasswrodScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Password screen'),
+        title:  Text('Password screen', style: TextStyle(fontSize: AppConstants.textSize),),
       ),
       body: Column(
         children: [
           TextField(
             controller: passwordController,
             decoration: InputDecoration(
+              hintStyle: TextStyle(fontSize: AppConstants.textSize),
               border: const OutlineInputBorder(),
               hintText: AppConstants.passwrod.isEmpty
                   ? 'set password'
@@ -89,7 +90,7 @@ class _PasswrodScreenState extends State<PasswrodScreen> {
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
-                        fontSize: 20),
+                        fontSize: AppConstants.textSize),
                   ),
                 ),
               ))

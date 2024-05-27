@@ -1,3 +1,4 @@
+import 'package:application/utils/app_constants.dart';
 import 'package:application/views/screens/password_screen.dart';
 import 'package:application/views/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
@@ -7,19 +8,22 @@ class HomeScreen extends StatelessWidget {
   final ValueChanged<String> onBackgroundChanged;
   final changeAppBarColor;
   final changeDrawerColor;
-  const HomeScreen(
-      {super.key,
-      required this.onThemeModeChanged,
-      required this.onBackgroundChanged,
-      required this.changeAppBarColor,
-      required this.changeDrawerColor,
-      });
+  const HomeScreen({
+    super.key,
+    required this.onThemeModeChanged,
+    required this.onBackgroundChanged,
+    required this.changeAppBarColor,
+    required this.changeDrawerColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home screen'),
+        title: Text(
+          'Home screen',
+          style: TextStyle(fontSize: AppConstants.textSize),
+        ),
       ),
       drawer: CustomDrawer(
         onThemeModeChanged: onThemeModeChanged,
