@@ -109,6 +109,7 @@ class _InfoCompanyState extends State<InfoCompany> {
                                 return AlertDialog(
                                   title: Text('Add a new product'),
                                   content: Column(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Form(
                                         key: formKey,
@@ -209,6 +210,7 @@ class _InfoCompanyState extends State<InfoCompany> {
                                 return AlertDialog(
                                   title: Text('Add an employee'),
                                   content: Column(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Form(
                                         key: formKey,
