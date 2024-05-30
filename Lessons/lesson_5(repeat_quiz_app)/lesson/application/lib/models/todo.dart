@@ -1,20 +1,27 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'todo.g.dart';
+
+@JsonSerializable()
 class ToDo {
-  int id;
+  String id;
   String title;
-  String desc;
+  String description;
   String date;
-  bool isDone;
+  bool isCompleted;
 
   ToDo(
       {required this.id,
       required this.title,
-      required this.desc,
+      required this.description,
       required this.date,
-      required this.isDone});
+      required this.isCompleted});
 
-  static final List<ToDo> _toDoList = [];
+  factory ToDo.fromJson(Map<String, dynamic> json) {
+    return _$ToDoFromJson(json);
+  }
 
-  static List<ToDo> get list {
-    return _toDoList;
+  Map<String, dynamic> toJson() {
+    return _$ToDoToJson(this);
   }
 }
