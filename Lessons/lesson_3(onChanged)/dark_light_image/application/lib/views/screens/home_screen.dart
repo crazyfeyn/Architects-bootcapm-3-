@@ -6,14 +6,17 @@ import 'package:flutter/material.dart';
 class HomeScreen extends StatelessWidget {
   final ValueChanged<bool> onThemeModeChanged;
   final ValueChanged<String> onBackgroundChanged;
+  final changeTextSize;
   final changeAppBarColor;
   final changeDrawerColor;
+  
   const HomeScreen({
     super.key,
     required this.onThemeModeChanged,
     required this.onBackgroundChanged,
     required this.changeAppBarColor,
     required this.changeDrawerColor,
+    required this.changeTextSize
   });
 
   @override
@@ -30,6 +33,7 @@ class HomeScreen extends StatelessWidget {
         onBackgroundChanged: onBackgroundChanged,
         changeAppBarColor: changeAppBarColor,
         changeDrawerColor: changeDrawerColor,
+        changeTextSize:changeTextSize
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -46,6 +50,7 @@ class HomeScreen extends StatelessWidget {
                           onBackgroundChanged: onBackgroundChanged,
                           changeAppBarColor: changeAppBarColor,
                           changeDrawerColor: changeDrawerColor,
+                          changeTextSize: changeTextSize
                         ))));
               },
               child: Icon(Icons.lock_open),

@@ -7,12 +7,14 @@ class PasswrodScreen extends StatefulWidget {
   final ValueChanged<String> onBackgroundChanged;
   final changeDrawerColor;
   final changeAppBarColor;
+  final changeTextSize;
   const PasswrodScreen(
       {super.key,
       required this.onThemeModeChanged,
       required this.onBackgroundChanged,
       required this.changeAppBarColor,
-      required this.changeDrawerColor
+      required this.changeDrawerColor,
+      required this.changeTextSize,
       });
 
   @override
@@ -31,7 +33,10 @@ class _PasswrodScreenState extends State<PasswrodScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text('Password screen', style: TextStyle(fontSize: AppConstants.textSize),),
+        title: Text(
+          'Password screen',
+          style: TextStyle(fontSize: AppConstants.textSize),
+        ),
       ),
       body: Column(
         children: [
@@ -60,6 +65,7 @@ class _PasswrodScreenState extends State<PasswrodScreen> {
                                 onBackgroundChanged: widget.onBackgroundChanged,
                                 changeAppBarColor: widget.changeAppBarColor,
                                 changeDrawerColor: widget.changeDrawerColor,
+                                changeTextSize: widget.changeTextSize
                               ))));
                 } else if (AppConstants.passwrod.isEmpty &&
                     passwordController.text.trim().isNotEmpty) {
@@ -72,6 +78,7 @@ class _PasswrodScreenState extends State<PasswrodScreen> {
                                 onBackgroundChanged: widget.onBackgroundChanged,
                                 changeAppBarColor: widget.changeAppBarColor,
                                 changeDrawerColor: widget.changeDrawerColor,
+                                changeTextSize: widget.changeTextSize
                               ))));
                   setState(() {});
                 }

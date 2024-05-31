@@ -7,12 +7,14 @@ class SettingsScreen extends StatefulWidget {
   final ValueChanged<String> onBackgroundChanged;
   final changeDrawerColor;
   final changeAppBarColor;
+  final changeTextSize;
   const SettingsScreen({
     super.key,
     required this.onThemeModeChanged,
     required this.onBackgroundChanged,
     required this.changeAppBarColor,
     required this.changeDrawerColor,
+    required this.changeTextSize,
   });
 
   @override
@@ -26,7 +28,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.dispose();
   }
 
-  final _formKey = GlobalKey<FormState>();
   String urlController = "";
   String newPasswrod = "";
   TextEditingController newPasswordController = TextEditingController();
@@ -42,11 +43,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ),
       drawer: CustomDrawer(
-        onThemeModeChanged: widget.onThemeModeChanged,
-        onBackgroundChanged: widget.onBackgroundChanged,
-        changeAppBarColor: widget.changeAppBarColor,
-        changeDrawerColor: widget.changeDrawerColor,
-      ),
+          onThemeModeChanged: widget.onThemeModeChanged,
+          onBackgroundChanged: widget.onBackgroundChanged,
+          changeAppBarColor: widget.changeAppBarColor,
+          changeDrawerColor: widget.changeDrawerColor,
+          changeTextSize: widget.changeTextSize),
       body: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -58,39 +59,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           children: [
             SwitchListTile(
-              value: AppConstants.themeMode == ThemeMode.dark,
+              value: AppConstants.themeMode == 'dark',
               onChanged: (value) {
                 widget.onThemeModeChanged(value);
               },
-
-
-
-
-
               title: Text(
                 "Tungi holat",
                 style: TextStyle(fontSize: AppConstants.textSize),
               ),
             ),
-            Form(
-                key: _formKey,
-                child: TextFormField(
-                  controller: controller,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'url',
-                      labelText: 'url',
-                      labelStyle: TextStyle(fontSize: AppConstants.textSize),
-                      hintStyle: TextStyle(fontSize: AppConstants.textSize),
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            if (controller.text.trim().isNotEmpty) {
-                              widget.onBackgroundChanged(controller.text);
-                              controller.clear();
-                            }
-                          },
-                          icon: const Icon(Icons.send))),
-                )),
             TextFormField(
               controller: newPasswordController,
               decoration: InputDecoration(
@@ -115,13 +92,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
               child: Container(
                 decoration:
-                    BoxDecoration(border: Border.all(color: Colors.black)),
+                    BoxDecoration(border: Border.all(color: Colors.red)),
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 child: Text(
                   'change appbars colors',
-                  style: TextStyle(
-                      color: Colors.black, fontSize: AppConstants.textSize),
+                  style: TextStyle(fontSize: AppConstants.textSize),
                 ),
               ),
             ),
@@ -131,13 +107,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
               child: Container(
                 decoration:
-                    BoxDecoration(border: Border.all(color: Colors.black)),
+                    BoxDecoration(border: Border.all(color: Colors.red)),
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
                 child: Text(
                   'change drawers colors',
-                  style: TextStyle(
-                      color: Colors.black, fontSize: AppConstants.textSize),
+                  style: TextStyle(fontSize: AppConstants.textSize),
                 ),
               ),
             ),
@@ -149,7 +124,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 label: AppConstants.textSize.toString(),
                 onChanged: (double value) {
                   setState(() {
-                    AppConstants.textSize = value;
+                    widget.changeTextSize(value);
                   });
                 })
           ],

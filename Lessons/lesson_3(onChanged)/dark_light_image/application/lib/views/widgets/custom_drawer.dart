@@ -8,12 +8,14 @@ class CustomDrawer extends StatelessWidget {
   final ValueChanged<String> onBackgroundChanged;
   final changeDrawerColor;
   final changeAppBarColor;
-  CustomDrawer({
+  final changeTextSize;
+  const CustomDrawer({
     super.key,
     required this.onThemeModeChanged,
     required this.onBackgroundChanged,
     required this.changeAppBarColor,
     required this.changeDrawerColor,
+    required this.changeTextSize,
   });
 
   @override
@@ -24,20 +26,22 @@ class CustomDrawer extends StatelessWidget {
         children: [
           AppBar(
             automaticallyImplyLeading: false,
-            title: Text('Menu', style: TextStyle(fontSize: AppConstants.textSize)),
+            title:
+                Text('Menu', style: TextStyle(fontSize: AppConstants.textSize)),
           ),
           ListTile(
             onTap: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (ctx) => HomeScreen(
-                        onThemeModeChanged: onThemeModeChanged,
-                        onBackgroundChanged: onBackgroundChanged,
-                        changeAppBarColor: changeAppBarColor,
-                        changeDrawerColor: changeDrawerColor,
-                      )));
+                      onThemeModeChanged: onThemeModeChanged,
+                      onBackgroundChanged: onBackgroundChanged,
+                      changeAppBarColor: changeAppBarColor,
+                      changeDrawerColor: changeDrawerColor,
+                      changeTextSize: changeTextSize)));
             },
             leading: const Icon(Icons.home),
-            title:  Text("Main Screen", style: TextStyle(fontSize: AppConstants.textSize)),
+            title: Text("Main Screen",
+                style: TextStyle(fontSize: AppConstants.textSize)),
             trailing: const Icon(
               Icons.chevron_right_rounded,
             ),
@@ -50,10 +54,12 @@ class CustomDrawer extends StatelessWidget {
                         onBackgroundChanged: onBackgroundChanged,
                         changeAppBarColor: changeAppBarColor,
                         changeDrawerColor: changeDrawerColor,
+                        changeTextSize: changeTextSize
                       )));
             },
             leading: const Icon(Icons.settings),
-            title: Text("Settings", style: TextStyle(fontSize: AppConstants.textSize)),
+            title: Text("Settings",
+                style: TextStyle(fontSize: AppConstants.textSize)),
             trailing: const Icon(
               Icons.chevron_right_rounded,
             ),

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 class AppConstants {
-  static ThemeMode themeMode = ThemeMode.light;
+
+  static String themeMode = "light";
   static String backgroundImageUrl = "";
   static String passwrod = "";
-  static Color appBarColor = Colors.amber;
-  static Color drawerColor = Colors.amber;
-  static double textSize = 14;
+  static Color appBarColor = Colors.blue;
+  static Color drawerColor = Colors.blue;
+  static double textSize = 12;
+  static int i = 0;
+  static int k = 2;
 }
