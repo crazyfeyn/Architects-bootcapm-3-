@@ -1,6 +1,6 @@
-import 'package:application/models/settings.dart';
-import 'package:application/utils/settings_notifier.dart';
+import 'package:application/services/weather_services_http.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -11,12 +11,19 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   String curLocation = 'tashkant';
+  WeatherServices weatherServices = WeatherServices();
+
   Future<void> saveChanges() async {}
 
   Future<void> getChanges() async {}
 
+  Future<void> getas() async {
+    await weatherServices.getInfotmation("ss");
+  }
+
   @override
   Widget build(BuildContext context) {
+    getas();
     return Scaffold(
       body: Center(
           child: Container(
@@ -29,19 +36,58 @@ class _MainScreenState extends State<MainScreen> {
                 colors: [
               Color(0xFF1D2547),
               Color(0xFF1D2547),
-              Color(0xFF805BCA),
+              Color.fromARGB(255, 103, 63, 184),
               Color.fromARGB(255, 245, 203, 253),
             ])),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              curLocation,
-              style: const TextStyle(fontSize: 20, color: Colors.white),
-            )
+            Image.asset('assets/images/initial_image.png'),
+            Column(
+              children: [
+                Text(
+                  'Weather',
+                  style: TextStyle(
+                      color: Color(0xFFFFFFFF),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 45.h,
+                      height: 0),
+                ),
+                Text(
+                  'ForeCast',
+                  style: TextStyle(
+                      color: Color(0xFFDDB130),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 45.h,
+                      height: 0),
+                )
+              ],
+            ),
+            SizedBox(height: 150.h),
           ],
         ),
       )),
     );
+  }
+}
+
+String getWeekDay(int weekDayNumber) {
+  switch (weekDayNumber) {
+    case DateTime.monday:
+      return "Mon";
+    case DateTime.tuesday:
+      return "Tue";
+    case DateTime.wednesday:
+      return "Wed";
+    case DateTime.thursday:
+      return "Thu";
+    case DateTime.friday:
+      return "Fri";
+    case DateTime.saturday:
+      return "Sat";
+    case DateTime.sunday:
+      return "Sun";
+    default:
+      return "Noma'lum kun";
   }
 }

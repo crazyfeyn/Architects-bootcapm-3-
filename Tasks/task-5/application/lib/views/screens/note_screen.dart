@@ -1,6 +1,5 @@
 import 'package:application/notifiers/settings_notifier.dart';
 import 'package:application/utils/app_constatnts.dart';
-import 'package:application/views/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 
 class NotePage extends StatefulWidget {
@@ -26,26 +25,25 @@ class _NotePageState extends State<NotePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: DrawerWidget(),
       appBar: AppBar(
-        title: Text('Note Taking'),
+        title: const Text('Note Taking'),
         actions: [
           IconButton(
-              icon: Icon(Icons.save),
+              icon: const Icon(Icons.save),
               onPressed: () {
                 _saveDocument();
               }),
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           child: TextFormField(
             controller: _controller,
             focusNode: _focusNode,
             maxLines: null,
             keyboardType: TextInputType.multiline,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Start writing your note...',
               border: OutlineInputBorder(),
             ),

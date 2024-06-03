@@ -44,5 +44,20 @@ class SettingsController with ChangeNotifier {
     if (index != -1) {
       ToDo.list[index] = todo;
     }
+    notifyListeners();
+  }
+
+  void changeBottomIndex(int index) {
+    AppConstatnt.curBottomIndex = index;
+    notifyListeners();
+  }
+
+  void changeIsAdd() {
+    AppConstatnt.isAdd = !AppConstatnt.isAdd;
+    notifyListeners();
+  }
+
+  void setW(double screenW) {
+    AppConstatnt.screenW = screenW;
   }
 }

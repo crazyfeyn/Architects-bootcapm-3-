@@ -1,7 +1,8 @@
-import 'package:application/notifiers/settings_notifier.dart';
+import 'package:application/utils/app_constatnts.dart';
 import 'package:application/views/screens/note_screen.dart';
+import 'package:application/views/screens/profile_screen.dart';
 import 'package:application/views/screens/todo_screen.dart';
-import 'package:application/views/widgets/drawer.dart';
+import 'package:application/views/widgets/navigation_rail.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,27 +12,97 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  bool isTodo = true;
+  bool isNote = false;
+  late TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: 0,
+    );
+    tabController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  void changeTodoNote(String value) {
+    setState(() {
+      if (value == 'isTodo') {
+        isTodo = true;
+        isNote = false;
+      } else if (value == 'isNote') {
+        isNote = true;
+        isTodo = false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final setting = SettingsNotifier.of(context).settings;
     return Scaffold(
-      appBar: AppBar(),
-      drawer: DrawerWidget(),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            SwitchListTile(
-              title: const Text('dark mode'),
-              value: setting.themeMode == ThemeMode.dark,
-              onChanged: (value) {
-                SettingsNotifier.of(context).toggleSwitch(value);
-              },
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFFDE49E),
+        title: tabController.index == 0
+            ? const Text(
+                "Todos",
+                style: TextStyle(
+                  color: Color(0xFFDD761C),
+                ),
+              )
+            : const Text(
+                "Notes",
+                style: TextStyle(
+                  color: Color(0xFFDD761C),
+                ),
+              ),
+        centerTitle: true,
+        bottom: TabBar(
+          dividerColor: const Color(0xFFFDE49E),
+          indicatorColor: const Color(0xFFDD761C),
+          labelColor: const Color(0xFF03AED2),
+          controller: tabController,
+          tabs: const [
+            Tab(
+              text: "Todos",
+              icon: Icon(
+                Icons.check_box_outlined,
+              ),
+            ),
+            Tab(
+              text: "Notes",
+              icon: Icon(Icons.note),
             )
           ],
         ),
       ),
+      body: AppConstatnt.screenW > 600
+          ? Row(
+              children: [
+                navigationRailWidget(context),
+                Expanded(
+                  child: TabBarView(
+                    controller: tabController,
+                    children: [TodoScreen(), NotePage()],
+                  ),
+                ),
+              ],
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: TabBarView(
+                    controller: tabController,
+                    children: [TodoScreen(), NotePage()],
+                  ),
+                ),
+              ],
+            ),
     );
   }
 }
