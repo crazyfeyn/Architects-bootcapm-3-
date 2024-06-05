@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:application/notifiers/settings_notifier.dart';
+import 'package:application/services/course_http_services.dart';
 import 'package:application/utils/app_constatnts.dart';
+import 'package:application/views/screens/courses_screen.dart';
 import 'package:application/views/screens/home_screen.dart';
 import 'package:application/views/screens/profile_screen.dart';
 import 'package:application/views/screens/statistics_screen.dart';
@@ -18,12 +22,20 @@ class _MainScreenState extends State<MainScreen> {
     const StatisticsScreen(),
   ];
 
+  List<Widget> realPages = const [
+    HomeScreen(),
+    StatisticsScreen(),
+    ProfileScreen(),
+    CoursesScreen(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: _getSelectedWidget(AppConstatnt.curBottomIndex),
+        body: realPages[AppConstatnt.curBottomIndex],
         bottomNavigationBar: AppConstatnt.screenW < 600
             ? BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
                 currentIndex: AppConstatnt.curBottomIndex,
                 onTap: (value) =>
                     SettingsNotifier.of(context).changeBottomIndex(value),
@@ -34,20 +46,9 @@ class _MainScreenState extends State<MainScreen> {
                         icon: Icon(Icons.bar_chart), label: 'statistics'),
                     BottomNavigationBarItem(
                         icon: Icon(Icons.person), label: 'profile'),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.library_add), label: 'Courses'),
                   ])
             : null);
-  }
-
-  
-
-  Widget _getSelectedWidget(int index) {
-    switch (index) {
-      case 0:
-        return const HomeScreen();
-      case 1:
-        return const StatisticsScreen();
-      default:
-        return const ProfileScreen();
-    }
   }
 }

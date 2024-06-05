@@ -57,6 +57,7 @@ class _TodoScreenState extends State<TodoScreen> {
                       IconButton(
                           onPressed: () {
                             SettingsNotifier.of(context).deleteTodo(todo);
+                            setState(() {});
                           },
                           icon: const Icon(
                             Icons.delete,
@@ -296,6 +297,7 @@ class _TodoScreenState extends State<TodoScreen> {
                                   date: date,
                                   isDone: false));
                             }
+                            setState(() {});
                           },
                           child: const Text('Add'),
                         ),

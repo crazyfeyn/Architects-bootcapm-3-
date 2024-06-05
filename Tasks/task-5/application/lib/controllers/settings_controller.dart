@@ -23,7 +23,6 @@ class SettingsController with ChangeNotifier {
 
   void addTodo(ToDo todo) {
     ToDo.list.add(todo);
-
     notifyListeners();
   }
 

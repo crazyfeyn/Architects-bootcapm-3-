@@ -10,46 +10,66 @@ class StatisticsScreen extends StatefulWidget {
   State<StatisticsScreen> createState() => _StatisticsScreenState();
 }
 
+bool empytyText = false;
+
 class _StatisticsScreenState extends State<StatisticsScreen> {
   int isCompletedTodosCount = 0;
   int unIsCompletedTodosCount = 0;
-  void reportTodo() {
-    for (var element in ToDo.list) {
-      if (element.isDone) {
-        isCompletedTodosCount++;
-      }
-    }
 
-    unIsCompletedTodosCount = ToDo.list.length;
+  void reportTodo() {
+    setState(() {
+      if (ToDo.list.isNotEmpty) {
+        isCompletedTodosCount = 0;
+        unIsCompletedTodosCount = 0;
+        empytyText = false;
+        unIsCompletedTodosCount = ToDo.list.length;
+        for (var element in ToDo.list) {
+          if (element.isDone) {
+            isCompletedTodosCount++;
+          }
+        }
+      } else {
+        empytyText = true;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    reportTodo();
   }
 
   @override
   Widget build(BuildContext context) {
-    reportTodo();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Statistic screen'),
+        title: const Text('Statistics'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Center(
           child: AppConstatnt.screenW > 600
               ? Row(
                   children: [
                     navigationRailWidget(context),
                     Text(
-                      '$isCompletedTodosCount todos are completed out of $unIsCompletedTodosCount todos',
+                      empytyText
+                          ? 'there is nothing to see the statistics'
+                          : '$isCompletedTodosCount todos are completed out of $unIsCompletedTodosCount todos',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                          const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                     ),
                   ],
                 )
               : Column(
                   children: [
                     Text(
-                      '$isCompletedTodosCount todos are completed out of $unIsCompletedTodosCount todos',
+                      empytyText
+                          ? 'there is nothing to see the statistics'
+                          : '$isCompletedTodosCount todos are completed out of $unIsCompletedTodosCount todos',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                          const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                     )
                   ],
                 ),
