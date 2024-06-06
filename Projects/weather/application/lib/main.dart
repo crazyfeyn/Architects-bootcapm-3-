@@ -8,12 +8,27 @@ void main(List<String> args) {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
-  
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
   Widget build(BuildContext context) {
+    void loadingPage() async {
+      Future.delayed(Duration(seconds: 1)).then((value) => Navigator.push(
+          context, MaterialPageRoute(builder: (context) => LoadingScreen())));
+    }
+
+    @override
+    void initState() {
+      super.initState();
+      loadingPage();
+    }
+
     return ScreenUtilInit(
         designSize: Size(MediaQuery.of(context).size.width,
             MediaQuery.of(context).size.height),

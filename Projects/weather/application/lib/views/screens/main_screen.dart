@@ -2,12 +2,10 @@ import 'package:application/models/city.dart';
 import 'package:application/models/weather.dart';
 import 'package:application/services/weather_services_http.dart';
 import 'package:application/views/screens/more_information.dart';
-import 'package:application/views/screens/saerchScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:location/location.dart';
 
 List<String> monthNames = [
   'Yanvar',
@@ -24,7 +22,6 @@ List<String> monthNames = [
   'Dekabr'
 ];
 
-// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
   dynamic latLung;
   HomeScreen({super.key, required this.latLung});
@@ -36,121 +33,164 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   WeatherServices weatherController = WeatherServices();
   bool checkLocationGif = true;
+  bool isLoading = true;
+  WeatherServices weatherServices = WeatherServices();
+
+  late List<Weather> weathers;
+
+  Future<void> loadWeatherData() async {
+    weathers = await weatherServices.getInfotmation("tashkent");
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                    Color(0xFF1D2547),
-                    Color(0xFF1D2547),
-                    Color.fromARGB(255, 103, 63, 184),
-                    Color.fromARGB(255, 178, 123, 189),
-                  ])),
-              child: FutureBuilder(
-                  future: weatherController.getInfotmation(widget.latLung),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                        ),
-                      );
-                    }
-                    final List<Weather> weathers = snapshot.data;
-                    print(weathers);
-                    return SingleChildScrollView(
+      body: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                Color(0xFF1D2547),
+                Color(0xFF1D2547),
+                Color.fromARGB(255, 103, 63, 184),
+                Color.fromARGB(255, 178, 123, 189),
+              ])),
+          child: SingleChildScrollView(
+            child: FutureBuilder(
+                future: weatherServices.getInfotmation('tashkent'),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(snapshot.error.toString()),
+                    );
+                  } else if (!snapshot.hasData) {
+                    return Container(
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                            Color(0xFF1D2547),
+                            Color(0xFF1D2547),
+                            Color.fromARGB(255, 103, 63, 184),
+                            Color.fromARGB(255, 178, 123, 189),
+                          ])),
+                      child: const Center(
+                        child: Text('Data is not found'),
+                      ),
+                    );
+                  } else {
+                    List<Weather> weathers = snapshot.data;
+                    return Container(
+                      padding: EdgeInsets.only(top: 60.h),
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                            Color(0xFF1D2547),
+                            Color(0xFF1D2547),
+                            Color.fromARGB(255, 103, 63, 184),
+                            Color.fromARGB(255, 178, 123, 189),
+                          ])),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          const SizedBox(height: 60),
                           Text(
                             City.selectedCity,
                             style: GoogleFonts.poppins(
-                                fontSize: 20.h,
+                                fontSize: 23.h,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white),
                           ),
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            width: 140.w,
-                            child: Image.asset(
-                              "assets/${weathers[0].weather[0]['icon']}.png",
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          SizedBox(height: 20.h),
-                          Text("${(weathers[0].main['temp'] - 272) ~/ 1}°",
-                              style: GoogleFonts.poppins(
-                                fontSize: 55.h,
-                                color: Colors.white,
-                                height: -0,
-                                fontWeight: FontWeight.w600,
-                              )),
-                          SizedBox(height: 15.h),
-                          Text("${weathers[0].weather[0]['main']}",
-                              style: GoogleFonts.poppins(
-                                  fontSize: 35.h,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500)),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          Column(
                             children: [
-                              Text(
-                                  "Max: ${(weathers[0].main['temp_max'] - 272) ~/ 1}°",
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 27.h,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500)),
-                              SizedBox(
-                                width: 30.w,
+                              Image.asset(
+                                "assets/images/${weathers[0].weather[0]['icon']}.png",
+                                width: 180.w,
                               ),
                               Text(
-                                  "Min: ${(weathers[0].main['temp_min'] - 272) ~/ 1}°",
+                                  "${(weathers[0].main['temp'] - 273.15) ~/ 1}°",
                                   style: GoogleFonts.poppins(
-                                      fontSize: 27.h,
+                                    fontSize: 45.h,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                              Text("${weathers[0].weather[0]['main']}",
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 30.h,
                                       color: Colors.white,
                                       fontWeight: FontWeight.w500)),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                      "Max: ${(weathers[0].main['temp_max'] - 273.15) ~/ 1}°",
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 24.h,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400)),
+                                  SizedBox(width: 30.w),
+                                  Text(
+                                      "Min: ${(weathers[0].main['temp_min'] - 273.15) ~/ 1}°",
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 24.h,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w400)),
+                                ],
+                              ),
                             ],
                           ),
-                          const SizedBox(height: 20),
+                          Image.asset(
+                            'assets/images/home.png',
+                            height: 180.h,
+                          ),
                           Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                                boxShadow: const [
-                                  BoxShadow(color: Color(0xff00000040))
-                                ],
-                                borderRadius: BorderRadius.circular(25),
-                                gradient: const LinearGradient(
-                                    begin: Alignment.bottomLeft,
-                                    end: Alignment.topRight,
-                                    colors: [
-                                      Color(0xff3E2D8F),
-                                      Color(0xff9d52acb2),
-                                    ])),
+                              borderRadius: BorderRadius.circular(25),
+                              gradient: const LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Color.fromARGB(255, 178, 123, 189),
+                                    Color.fromARGB(255, 103, 63, 184),
+                                    Color(0xFF1D2547),
+                                  ]),
+                            ),
                             child: Column(
                               children: [
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(40, 15, 40, 15),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 14.h, horizontal: 18.w),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text("Today",
                                           style: GoogleFonts.poppins(
-                                              fontSize: 23.h,
+                                              fontSize: 20.h,
                                               fontWeight: FontWeight.w600,
                                               color: Colors.white)),
                                       Text(
                                           "${monthNames[weathers[0].dt_txt.month - 1]}, ${weathers[0].dt_txt.day}",
                                           style: GoogleFonts.poppins(
-                                              fontSize: 23.h,
+                                              fontSize: 20.h,
                                               fontWeight: FontWeight.w600,
                                               color: Colors.white))
                                     ],
@@ -158,13 +198,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Container(
                                   width: double.infinity,
-                                  height: 2,
+                                  height: 1.h,
                                   color:
                                       const Color.fromARGB(255, 183, 167, 223),
                                 ),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 10.w, vertical: 20.h),
                                   child: SingleChildScrollView(
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
@@ -181,69 +221,28 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     );
-                  }))),
+                  }
+                }),
+          )),
       bottomNavigationBar: BottomAppBar(
         color: const Color.fromARGB(255, 178, 123, 189),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             checkLocationGif
-                ? IconButton(
-                    onPressed: () async {
-                      setState(() {
-                        checkLocationGif = false;
-                      });
-                      Location location = Location();
-
-                      bool serviceEnabled;
-                      PermissionStatus permissionGranted;
-                      LocationData _locationData;
-
-                      serviceEnabled = await location.serviceEnabled();
-                      if (!serviceEnabled) {
-                        serviceEnabled = await location.requestService();
-                        if (!serviceEnabled) {
-                          return;
-                        }
-                      }
-
-                      permissionGranted = await location.hasPermission();
-                      if (permissionGranted == PermissionStatus.denied) {
-                        permissionGranted = await location.requestPermission();
-                        if (permissionGranted != PermissionStatus.granted) {
-                          return;
-                        }
-                      }
-
-                      _locationData = await location.getLocation();
-                      if (_locationData.latitude != null) {
-                        if (!mounted) return;
-                        Navigator.pushReplacement(context, MaterialPageRoute(
-                          builder: (context) {
-                            return HomeScreen(latLung: [
-                              _locationData.latitude,
-                              _locationData.longitude
-                            ]);
-                          },
-                        ));
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.location_on_outlined,
-                      color: Colors.white,
-                      size: 45,
-                    ))
+                ? IconButton(onPressed: () {}, icon: const Icon(Icons.add))
                 : SizedBox(
                     width: 40,
                     child: Image.asset("assets/load.gif"),
                   ),
             IconButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SearchScreen(),
-                      ));
+                  // Navigator.pushReplacement(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const SearchScreen(),
+                  //   )
+                  // );
                 },
                 icon: const Icon(
                   Icons.search,
@@ -254,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () async {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
-                      return MoreInformationScreen();
+                      return const MoreInformationScreen();
                     },
                   ));
                 },
@@ -278,7 +277,7 @@ Widget hoursInformation(Weather weather) {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("${(weather.main['temp'] - 272) ~/ 1}℃",
+            Text("${(weather.main['temp'] - 273.15) ~/ 1}℃",
                 style: GoogleFonts.poppins(
                     fontSize: 25.h,
                     color: Colors.white,
@@ -288,31 +287,27 @@ Widget hoursInformation(Weather weather) {
                 width: 50.w,
                 child: weather.dt_txt.hour > 5 && weather.dt_txt.hour < 21
                     ? Image.asset(
-                        "assets/${weather.weather[0]['icon']}.png"
-                                .substring(0, 9) +
-                            "d" +
-                            "assets/${weather.weather[0]['icon']}.png"
-                                .substring(9 + 1),
+                        "assets/images/${weather.weather[0]['icon']}.png",
                         fit: BoxFit.cover,
                       )
                     : Image.asset(
-                        "assets/${weather.weather[0]['icon']}.png"
-                                .substring(0, 9) +
-                            "n" +
-                            "assets/${weather.weather[0]['icon']}.png"
-                                .substring(9 + 1),
+                        "assets/images/${weather.weather[0]['icon']}.png",
                         fit: BoxFit.cover,
                       )),
-            Text("${weather.dt_txt.hour}.00",
+            Text("${weather.dt_txt.hour}:00",
                 style: GoogleFonts.poppins(
-                    fontSize: 23.h,
+                    fontSize: 24.h,
                     color: Colors.white,
-                    height: -0,
                     fontWeight: FontWeight.w500)),
           ],
         ),
       ),
-      const SizedBox(width: 40)
+      Container(
+        margin: const EdgeInsets.symmetric(horizontal: 5),
+        width: 1.h,
+        height: 90.h,
+        color: const Color.fromARGB(255, 183, 167, 223),
+      ),
     ],
   );
 }
