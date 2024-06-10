@@ -1,13 +1,11 @@
-import 'dart:async';
-
 import 'package:application/notifiers/settings_notifier.dart';
-import 'package:application/services/course_http_services.dart';
 import 'package:application/utils/app_constatnts.dart';
 import 'package:application/views/screens/courses_screen.dart';
 import 'package:application/views/screens/home_screen.dart';
 import 'package:application/views/screens/profile_screen.dart';
 import 'package:application/views/screens/statistics_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -28,6 +26,12 @@ class _MainScreenState extends State<MainScreen> {
     ProfileScreen(),
     CoursesScreen(),
   ];
+  
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

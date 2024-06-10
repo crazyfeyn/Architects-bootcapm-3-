@@ -2,24 +2,26 @@ import 'package:application/models/city.dart';
 import 'package:application/models/weather.dart';
 import 'package:application/services/weather_services_http.dart';
 import 'package:application/views/screens/more_information.dart';
+import 'package:application/views/screens/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 List<String> monthNames = [
-  'Yanvar',
-  'Fevral',
-  'Mart',
-  'Aprel',
+  'January',
+  'February',
+  'March',
+  'April',
   'May',
-  'Iyun',
-  'Iyul',
-  'Avgust',
-  'Sentabr',
-  'Oktabr',
-  'Noyabr',
-  'Dekabr'
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
 ];
 
 class HomeScreen extends StatefulWidget {
@@ -31,71 +33,98 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  WeatherServices weatherController = WeatherServices();
-  bool checkLocationGif = true;
   bool isLoading = true;
   WeatherServices weatherServices = WeatherServices();
+  String selectedCityForApp = City.selectedCity;
 
   late List<Weather> weathers;
 
   Future<void> loadWeatherData() async {
-    weathers = await weatherServices.getInfotmation("tashkent");
+    weathers = await weatherServices.getInfotmation(selectedCityForApp);
     setState(() {
       isLoading = false;
+    });
+  }
+
+  Future<void> initialCityNamed() async {
+    selectedCityForApp = await widget.latLung;
+    setState(() {});
+  }
+
+  Future<void> getString() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedCityForApp = prefs.getString('selectedCityForApp') ?? 'Chirchiq';
     });
   }
 
   @override
   void initState() {
     super.initState();
+    getString();
+  }
+
+  Future<void> refresh() async {
+    loadWeatherData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                Color(0xFF1D2547),
-                Color(0xFF1D2547),
-                Color.fromARGB(255, 103, 63, 184),
-                Color.fromARGB(255, 178, 123, 189),
-              ])),
-          child: SingleChildScrollView(
-            child: FutureBuilder(
-                future: weatherServices.getInfotmation('tashkent'),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text(snapshot.error.toString()),
-                    );
-                  } else if (!snapshot.hasData) {
-                    return Container(
-                      decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                            Color(0xFF1D2547),
-                            Color(0xFF1D2547),
-                            Color.fromARGB(255, 103, 63, 184),
-                            Color.fromARGB(255, 178, 123, 189),
-                          ])),
-                      child: const Center(
-                        child: Text('Data is not found'),
-                      ),
-                    );
-                  } else {
-                    List<Weather> weathers = snapshot.data;
+      body: RefreshIndicator(
+        onRefresh: () {
+          return refresh();
+        },
+        child: Container(
+            height: double.infinity,
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                  Color(0xFF1D2547),
+                  Color(0xFF1D2547),
+                  Color.fromARGB(255, 103, 63, 184),
+                  Color.fromARGB(255, 178, 123, 189),
+                ])),
+            child: SingleChildScrollView(
+              child: FutureBuilder(
+                  future: weatherServices.getInfotmation(selectedCityForApp),
+                  builder: (BuildContext context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        width: double.infinity,
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text(snapshot.error.toString()),
+                      );
+                    }
+                    if (!snapshot.hasData || snapshot.data.isEmpty) {
+                      return Container(
+                        decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                              Color(0xFF1D2547),
+                              Color(0xFF1D2547),
+                              Color.fromARGB(255, 103, 63, 184),
+                              Color.fromARGB(255, 178, 123, 189),
+                            ])),
+                        child: const Center(
+                          child: Text('Data is not found'),
+                        ),
+                      );
+                    }
+                    final List<Weather> weathers = snapshot.data!;
                     return Container(
                       padding: EdgeInsets.only(top: 60.h),
                       decoration: const BoxDecoration(
@@ -112,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text(
-                            City.selectedCity,
+                            selectedCityForApp,
                             style: GoogleFonts.poppins(
                                 fontSize: 23.h,
                                 fontWeight: FontWeight.w600,
@@ -210,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Row(
                                       children: [
                                         for (var i = 0; i < 9; i++)
-                                          hoursInformation(weathers[i]),
+                                          hoursInformation(weathers[i], i),
                                       ],
                                     ),
                                   ),
@@ -221,33 +250,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     );
-                  }
-                }),
-          )),
+                  }),
+            )),
+      ),
       bottomNavigationBar: BottomAppBar(
         color: const Color.fromARGB(255, 178, 123, 189),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            checkLocationGif
-                ? IconButton(onPressed: () {}, icon: const Icon(Icons.add))
-                : SizedBox(
-                    width: 40,
-                    child: Image.asset("assets/load.gif"),
-                  ),
             IconButton(
                 onPressed: () {
-                  // Navigator.pushReplacement(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const SearchScreen(),
-                  //   )
-                  // );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SearchScreen()));
                 },
                 icon: const Icon(
                   Icons.search,
                   color: Colors.white,
-                  size: 45,
+                  size: 35,
                 )),
             IconButton(
                 onPressed: () async {
@@ -260,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(
                   CupertinoIcons.line_horizontal_3,
                   color: Colors.white,
-                  size: 55,
+                  size: 35,
                 ))
           ],
         ),
@@ -269,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Widget hoursInformation(Weather weather) {
+Widget hoursInformation(Weather weather, int i) {
   return Row(
     children: [
       SizedBox(
@@ -279,9 +300,8 @@ Widget hoursInformation(Weather weather) {
           children: [
             Text("${(weather.main['temp'] - 273.15) ~/ 1}℃",
                 style: GoogleFonts.poppins(
-                    fontSize: 25.h,
+                    fontSize: 20.h,
                     color: Colors.white,
-                    height: -0,
                     fontWeight: FontWeight.w500)),
             SizedBox(
                 width: 50.w,
@@ -296,18 +316,13 @@ Widget hoursInformation(Weather weather) {
                       )),
             Text("${weather.dt_txt.hour}:00",
                 style: GoogleFonts.poppins(
-                    fontSize: 24.h,
+                    fontSize: 20.h,
                     color: Colors.white,
                     fontWeight: FontWeight.w500)),
           ],
         ),
       ),
-      Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5),
-        width: 1.h,
-        height: 90.h,
-        color: const Color.fromARGB(255, 183, 167, 223),
-      ),
+      SizedBox(width: 20.w),
     ],
   );
 }

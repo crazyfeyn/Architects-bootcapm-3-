@@ -1,7 +1,7 @@
 import 'package:application/services/weather_services_http.dart';
+import 'package:application/views/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:location/location.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -11,53 +11,17 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
-  String curLocation = 'tashkent';
   WeatherServices weatherServices = WeatherServices();
-
-  Future<void> saveChanges() async {}
-
-  Future<void> getChanges() async {}
 
   @override
   void initState() {
-    // _askLocation();
     super.initState();
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (ctx) => HomeScreen(latLung: '')));
+    });
   }
 
-  // Future<void> _askLocation() async {
-  //   Location location = Location();
-
-  //   bool serviceEnabled;
-  //   PermissionStatus permissionGranted;
-  //   LocationData locationData;
-
-  //   serviceEnabled = await location.serviceEnabled();
-  //   if (!serviceEnabled) {
-  //     serviceEnabled = await location.requestService();
-  //     if (!serviceEnabled) {
-  //       return;
-  //     }
-  //   }
-
-  //   permissionGranted = await location.hasPermission();
-  //   if (permissionGranted == PermissionStatus.denied) {
-  //     permissionGranted = await location.requestPermission();
-  //     if (permissionGranted != PermissionStatus.granted) {
-  //       return;
-  //     }
-  //   }
-
-  //   locationData = await location.getLocation();
-  //   print(locationData);
-  //   // if (locationData.latitude != null) {
-  //   //   if (!mounted) return;
-  //   //   Navigator.pushReplacement(context, MaterialPageRoute(
-  //   //     builder: (context) {
-  //   //       return MainScreen();
-  //   //     },
-  //   //   ));
-  //   // }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +49,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 Text(
                   'Weather',
                   style: TextStyle(
-                      color: Color(0xFFFFFFFF),
+                      color: const Color(0xFFFFFFFF),
                       fontWeight: FontWeight.w600,
                       fontSize: 45.h,
                       height: 0),
@@ -93,7 +57,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 Text(
                   'ForeCast',
                   style: TextStyle(
-                      color: Color(0xFFDDB130),
+                      color: const Color(0xFFDDB130),
                       fontWeight: FontWeight.w600,
                       fontSize: 45.h,
                       height: 0),
@@ -105,26 +69,5 @@ class _LoadingScreenState extends State<LoadingScreen> {
         ),
       )),
     );
-  }
-}
-
-String getWeekDay(int weekDayNumber) {
-  switch (weekDayNumber) {
-    case DateTime.monday:
-      return "Mon";
-    case DateTime.tuesday:
-      return "Tue";
-    case DateTime.wednesday:
-      return "Wed";
-    case DateTime.thursday:
-      return "Thu";
-    case DateTime.friday:
-      return "Fri";
-    case DateTime.saturday:
-      return "Sat";
-    case DateTime.sunday:
-      return "Sun";
-    default:
-      return "Noma'lum kun";
   }
 }

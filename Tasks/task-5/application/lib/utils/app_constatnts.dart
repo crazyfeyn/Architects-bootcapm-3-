@@ -6,4 +6,5 @@ class AppConstatnt {
   static List<Widget> bigScreenList = [];
   static bool isAdd = false;
   static double screenW = 0;
+  static String token = "";
 }

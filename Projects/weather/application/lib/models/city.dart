@@ -1,3 +1,3 @@
-class City{
-static String selectedCity = "";
+class City {
+  static String selectedCity = "tashkent";
 }

@@ -1,6 +1,5 @@
 import 'package:application/utils/app_constatnts.dart';
 import 'package:application/views/screens/note_screen.dart';
-import 'package:application/views/screens/profile_screen.dart';
 import 'package:application/views/screens/todo_screen.dart';
 import 'package:application/views/widgets/navigation_rail.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +46,11 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/loginScreen');
+            },
+            icon: Icon(Icons.arrow_left_rounded)),
         backgroundColor: const Color(0xFFFDE49E),
         title: tabController.index == 0
             ? const Text(

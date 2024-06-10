@@ -8,26 +8,16 @@ void main(List<String> args) {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
   Widget build(BuildContext context) {
-    void loadingPage() async {
-      Future.delayed(Duration(seconds: 1)).then((value) => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => LoadingScreen())));
-    }
+    // void loadingPage() async {
+    //   Future.delayed(const Duration(seconds: 1)).then((value) => Navigator.push(
+    //       context, MaterialPageRoute(builder: (context) => const LoadingScreen())));
+    // }
 
-    @override
-    void initState() {
-      super.initState();
-      loadingPage();
-    }
 
     return ScreenUtilInit(
         designSize: Size(MediaQuery.of(context).size.width,
@@ -37,7 +27,7 @@ class _MyAppState extends State<MyApp> {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           darkTheme: ThemeData.dark(),
-          home: HomeScreen(latLung: City.selectedCity),
-        ));
+          home: const LoadingScreen()),
+        );
   }
 }

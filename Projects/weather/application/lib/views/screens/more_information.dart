@@ -16,6 +16,7 @@ class MoreInformationScreen extends StatefulWidget {
 
 class _MoreInformationScreenState extends State<MoreInformationScreen> {
   WeatherServices weatherController = WeatherServices();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +82,7 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text("kunlar prognozi",
+                                Text("DAILY FORECASTS",
                                     style: GoogleFonts.poppins(
                                         fontSize: 25.h,
                                         fontWeight: FontWeight.w700,
@@ -148,19 +149,19 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      "Namlik: ${weathers[0].main['humidity']}%",
+                                      "Humidity: ${weathers[0].main['humidity']}%",
                                       style: GoogleFonts.poppins(
                                           fontSize: 20.h,
                                           color: Colors.white,
                                           fontWeight: FontWeight.w500)),
                                   Text(
-                                      "Shamol tezligi: ${weathers[0].wind['speed']}m/s",
+                                      "Wind speed: ${weathers[0].wind['speed']}m/s",
                                       style: GoogleFonts.poppins(
                                           fontSize: 20.h,
                                           color: Colors.white,
                                           fontWeight: FontWeight.w500)),
                                   Text(
-                                    "Havo bosimi: ${weathers[0].main['pressure']}mbar",
+                                    "Air pressure: ${weathers[0].main['pressure']} m/bars",
                                     style: GoogleFonts.poppins(
                                         fontSize: 20.h,
                                         color: Colors.white,
@@ -186,7 +187,7 @@ class _MoreInformationScreenState extends State<MoreInformationScreen> {
                 icon: const Icon(
                   CupertinoIcons.line_horizontal_3,
                   color: Colors.white,
-                  size: 100,
+                  size: 60,
                 )),
             const SizedBox(
               width: 20,
@@ -218,24 +219,19 @@ Widget daysInformation(Weather weather) {
           children: [
             Text("${(weather.main['temp'] - 272) ~/ 1}℃",
                 style: GoogleFonts.poppins(
-                    fontSize: 22.h,
+                    fontSize: 18.h,
                     color: Colors.white,
-                    height: -0,
                     fontWeight: FontWeight.w500)),
             SizedBox(
                 width: 50.w,
                 child: Image.asset(
-                  "assets/${weather.weather[0]['icon']}.png".substring(0, 9) +
-                      "d" +
-                      "assets/${weather.weather[0]['icon']}.png"
-                          .substring(9 + 1),
+                  "assets/images/${weather.weather[0]['icon']}.png",
                   fit: BoxFit.cover,
                 )),
             Text(getWeekDay(weather.dt_txt.weekday),
                 style: GoogleFonts.poppins(
-                    fontSize: 20.sp,
+                    fontSize: 18.h,
                     color: Colors.white,
-                    height: -0,
                     fontWeight: FontWeight.w500)),
           ],
         ),

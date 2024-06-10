@@ -1,4 +1,5 @@
 import 'package:application/models/todo.dart';
+import 'package:application/services/local_database.dart';
 import 'package:application/viewmodels/todo_viewmodel.dart';
 import 'package:application/views/widgets/manage_todo_dialog.dart';
 import 'package:application/views/widgets/todo_item.dart';
@@ -13,6 +14,14 @@ class TodosScreen extends StatefulWidget {
 
 class _TodosScreenState extends State<TodosScreen> {
   final toDosViewmodel = ToDosViewmodel();
+  final LocalDatabase localDatabase = LocalDatabase();
+
+  void testFunc() async {
+    await localDatabase.database;
+    await localDatabase.addTodo('asas', 'assa', 'assa', false);
+    var x = await localDatabase.getTodos();
+    print(x);
+  }
 
   void addTodo() async {
     final data = await showDialog(
@@ -86,6 +95,8 @@ class _TodosScreenState extends State<TodosScreen> {
 
   @override
   Widget build(BuildContext context) {
+    testFunc();
+
     return Scaffold(
       backgroundColor: Colors.yellow,
       appBar: AppBar(
