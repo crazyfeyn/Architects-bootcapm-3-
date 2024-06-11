@@ -1,5 +1,6 @@
 import 'package:application/models/my_course.dart';
 import 'package:application/services/course_http_services.dart';
+import 'package:application/utils/app_constatnts.dart';
 import 'package:application/views/widgets/course_item.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,20 @@ class _CoursesScreenState extends State<CoursesScreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  void focoriteTapped(CourseModel course) {
+    setState(() {
+      AppConstatnt.favorites.add(course);
+      AppConstatnt.isFavorite = !AppConstatnt.isFavorite;
+    });
+  }
+
+  void buyTapped(CourseModel course) async {
+    setState(() {
+      AppConstatnt.isBought = !AppConstatnt.isBought;
+      AppConstatnt.boughtCourses.add(course);
+    });
   }
 
   @override
@@ -48,7 +63,12 @@ class _CoursesScreenState extends State<CoursesScreen> {
               itemCount: courses.length,
               itemBuilder: ((context, index) {
                 final course = courses[index];
-                return CourseItem(course: course);
+                return CourseItem(
+                    course: course,
+                    isFavorite: AppConstatnt.isFavorite,
+                    focoriteTapped: focoriteTapped,
+                    isBought: AppConstatnt.isBought,
+                    buyTapped: buyTapped);
               }));
         },
       ),

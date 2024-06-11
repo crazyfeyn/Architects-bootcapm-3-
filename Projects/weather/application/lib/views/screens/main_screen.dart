@@ -1,4 +1,5 @@
-import 'package:application/models/city.dart';
+import 'dart:async';
+
 import 'package:application/models/weather.dart';
 import 'package:application/services/weather_services_http.dart';
 import 'package:application/views/screens/more_information.dart';
@@ -24,6 +25,7 @@ List<String> monthNames = [
   'December'
 ];
 
+// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
   dynamic latLung;
   HomeScreen({super.key, required this.latLung});
@@ -35,7 +37,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = true;
   WeatherServices weatherServices = WeatherServices();
-  String selectedCityForApp = City.selectedCity;
+  late String selectedCityForApp;
 
   late List<Weather> weathers;
 
@@ -46,22 +48,16 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> initialCityNamed() async {
-    selectedCityForApp = await widget.latLung;
+  void initialCityNamed() {
+    selectedCityForApp = widget.latLung;
     setState(() {});
-  }
-
-  Future<void> getString() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      selectedCityForApp = prefs.getString('selectedCityForApp') ?? 'Chirchiq';
-    });
   }
 
   @override
   void initState() {
+    selectedCityForApp = widget.latLung;
+
     super.initState();
-    getString();
   }
 
   Future<void> refresh() async {
@@ -125,6 +121,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }
                     final List<Weather> weathers = snapshot.data!;
+                    // print("$selectedCityForApp -- - - - - ");
+
                     return Container(
                       padding: EdgeInsets.only(top: 60.h),
                       decoration: const BoxDecoration(
@@ -260,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             IconButton(
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const SearchScreen()));

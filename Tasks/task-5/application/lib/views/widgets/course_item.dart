@@ -3,13 +3,26 @@ import 'package:flutter/material.dart';
 
 class CourseItem extends StatelessWidget {
   final CourseModel course;
-  const CourseItem({super.key, required this.course});
+  Function focoriteTapped;
+  Function buyTapped;
+  bool isFavorite;
+  bool isBought;
+
+  CourseItem({
+    super.key,
+    required this.course,
+    required this.isFavorite,
+    required this.focoriteTapped,
+    required this.isBought,
+    required this.buyTapped,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/courseInfoScreen', arguments: course.lessons);
+          Navigator.pushNamed(context, '/courseInfoScreen',
+              arguments: course.lessons);
         },
         child: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -46,7 +59,37 @@ class CourseItem extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 5),
-                    Text(course.description)
+                    Text(course.description),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            buyTapped(course);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: Colors.amber,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Text(
+                              isBought ? 'Bought' : 'Buy',
+                              style: const TextStyle(fontSize: 17),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              focoriteTapped(course);
+                            },
+                            icon: Icon(isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border))
+                      ],
+                    ),
                   ],
                 ),
               ),

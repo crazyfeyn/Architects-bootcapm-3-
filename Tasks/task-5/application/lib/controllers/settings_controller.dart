@@ -59,4 +59,6 @@ class SettingsController with ChangeNotifier {
   void setW(double screenW) {
     AppConstatnt.screenW = screenW;
   }
+
+  
 }

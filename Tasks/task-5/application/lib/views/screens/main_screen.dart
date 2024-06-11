@@ -1,11 +1,12 @@
 import 'package:application/notifiers/settings_notifier.dart';
 import 'package:application/utils/app_constatnts.dart';
+import 'package:application/views/screens/basket_screen.dart';
 import 'package:application/views/screens/courses_screen.dart';
+import 'package:application/views/screens/favorites_screen.dart';
 import 'package:application/views/screens/home_screen.dart';
 import 'package:application/views/screens/profile_screen.dart';
 import 'package:application/views/screens/statistics_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -25,8 +26,8 @@ class _MainScreenState extends State<MainScreen> {
     StatisticsScreen(),
     ProfileScreen(),
     CoursesScreen(),
+    BasketScreen(), FavoriteScreen()
   ];
-  
 
   @override
   void initState() {
@@ -52,6 +53,10 @@ class _MainScreenState extends State<MainScreen> {
                         icon: Icon(Icons.person), label: 'profile'),
                     BottomNavigationBarItem(
                         icon: Icon(Icons.library_add), label: 'Courses'),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.shopping_cart_sharp), label: 'Basket'),
+                    BottomNavigationBarItem(
+                        icon: Icon(Icons.favorite), label: 'Favorite'),
                   ])
             : null);
   }

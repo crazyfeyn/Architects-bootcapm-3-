@@ -46,7 +46,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Future<List<String>> getString() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getStringList('savedCities') ?? [];
+    List<String>? box = prefs.getStringList('savedCities');
+    if (box == null) {
+      return [];
+    } else {
+      return box;
+    }
   }
 
   void firstFunc() async {
@@ -64,6 +69,8 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     firstFunc();
+    setState(() {});
+    print(savedCities);
   }
 
   @override
@@ -119,15 +126,14 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   Expanded(
                       child: ListView.builder(
-                          itemCount: savedCities
-                              .where((element) => element.isNotEmpty)
-                              .length,
+                          itemCount: savedCities.length,
                           itemBuilder: (context, index) {
                             final city = savedCities[index];
                             if (city.isNotEmpty)
                               // ignore: curly_braces_in_flow_control_structures
                               return InkWell(
                                 onTap: () {
+                                  print(city);
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(

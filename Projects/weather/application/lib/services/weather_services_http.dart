@@ -12,14 +12,12 @@ class WeatherServices {
   }
 
   Future<dynamic> getInfotmation(String city) async {
-    print("----$city");
     Uri url = Uri.parse(
         "https://api.openweathermap.org/data/2.5/forecast?q=$city&appid=353124e7e27814f76fb4c773a6a9ac82");
 
     List<Weather> loadedWeather = [];
 
     try {
-      print("asdadad");
       final response = await http.get(url);
       final data = jsonDecode(response.body);
       City.selectedCity = data['city']['name'];
@@ -29,9 +27,7 @@ class WeatherServices {
         loadedWeather.add(Weather.fromJson(value));
       });
     } catch (e) {
-      print(
-          '-------------error is $e-----------------------------------------------------------------');
-      return [];
+      return "shaxar mavjud emas";
     }
 
     return loadedWeather;

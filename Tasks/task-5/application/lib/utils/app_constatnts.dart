@@ -1,3 +1,4 @@
+import 'package:application/models/my_course.dart';
 import 'package:flutter/material.dart';
 
 class AppConstatnt {
@@ -7,4 +8,8 @@ class AppConstatnt {
   static bool isAdd = false;
   static double screenW = 0;
   static String token = "";
+  static List<CourseModel> boughtCourses = [];
+  static List<CourseModel> favorites = [];
+  static bool isBought = false;
+  static bool isFavorite = false;
 }

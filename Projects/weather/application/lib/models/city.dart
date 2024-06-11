@@ -1,3 +1,3 @@
 class City {
-  static String selectedCity = "tashkent";
+  static String selectedCity = "Chirchiq";
 }
