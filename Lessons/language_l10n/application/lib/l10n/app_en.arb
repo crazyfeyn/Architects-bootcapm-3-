@@ -1,0 +1,31 @@
+{
+    "helloWorld": "Hello World",
+    "@helloWorld": {
+        "description": "The conventional newborn programmer greeting"
+    },  
+    "hello": "Hello {userName}",
+    "@hello": {
+        "description": "A message with a single parametr",
+        "placeholders": {
+            "UserName": {
+                "type": "String",
+                "example": "Bob"
+            }
+        }
+    },
+
+    "apple": "Olma",
+    "@apple": {
+        "description": "delicious fruit"
+    },
+
+    "napples": "{count, plural, =0{olmalar yo'q} =1{1 apples} other{{count} apples}}",
+    "@apples": {
+        "placeholders": {
+            "count": {
+            "type": "num",
+            "format": "compact"
+        }
+        }
+    }
+}

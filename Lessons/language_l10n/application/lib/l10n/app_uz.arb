@@ -1,0 +1,11 @@
+{
+    "helloWorld": "Salom Dunyo",
+    "apple": "Olma",
+    "hello": "Salom {userName}", 
+    
+
+  
+
+    "napples": "{count, plural, =0{olma yoq} =1{1 olma} other{{count} olmalar}}"
+    
+}
