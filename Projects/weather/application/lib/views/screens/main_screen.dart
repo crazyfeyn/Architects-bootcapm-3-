@@ -258,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             IconButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const SearchScreen()));

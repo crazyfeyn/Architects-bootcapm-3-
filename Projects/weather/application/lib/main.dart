@@ -12,16 +12,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return ScreenUtilInit(
-        designSize: Size(MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        child: MaterialApp(
+      designSize: Size(MediaQuery.of(context).size.width,
+          MediaQuery.of(context).size.height),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      child: MaterialApp(
           debugShowCheckedModeBanner: false,
           darkTheme: ThemeData.dark(),
           home: const LoadingScreen()),
-        );
+    );
   }
 }
