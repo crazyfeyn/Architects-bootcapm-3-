@@ -2,6 +2,7 @@ import 'package:application/models/currency.dart';
 import 'package:application/services/currency_sevices.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -13,17 +14,19 @@ class HomeScreen extends StatefulWidget {
 final currencyServices = CurrencyServices();
 List<String> currencyCodes = [];
 String fromCurrencyCode = '';
-String toCurrencyCode = '';
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _fromPriceController = TextEditingController();
   TextEditingController _toPriceController = TextEditingController();
-  GlobalKey<FormState> formKey_1 = GlobalKey<FormState>();
-  GlobalKey<FormState> formKey_2 = GlobalKey<FormState>();
-  String? dropDownValue_1;
-  String? dropDownValue_2;
+  GlobalKey<FormState> formKey1 = GlobalKey<FormState>();
+  String? dropDownValue1;
   String initialFromImage = '';
   String initialToImage = '';
+  bool isDownloaded = true;
+  String convertCurToUzs = '0.0';
+  String buyingPrice = '';
+  String sellingPrice = '';
+  List<Currency> currencies = [];
 
   @override
   void initState() {
@@ -32,61 +35,38 @@ class _HomeScreenState extends State<HomeScreen> {
     // getSavedInfo();
   }
 
-  // Future<void> saveInfo(
-  //     String fromCurrencyFlag,
-  //     String toCurrencyFlag,
-  //     String fromCurrencyCode,
-  //     String toCurrencyCode,
-  //     String fromCurrencyController,
-  //     String toCurrencyController) async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setString('fromCurrencyFlag', fromCurrencyFlag);
-  //   await prefs.setString('toCurrencyFlag', toCurrencyFlag);
-  //   await prefs.setString('fromCurrencyCode', fromCurrencyCode);
-  //   await prefs.setString('toCurrencyCode', toCurrencyCode);
-  //   await prefs.setString('fromCurrencyController', fromCurrencyController);
-  //   await prefs.setString('toCurrencyController', toCurrencyController);
-  // }
-
-  // Future<void> getSavedInfo() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     fromCurrencyCode = prefs.getString('fromCurrencyCode') ?? 'USD';
-  //     toCurrencyCode = prefs.getString('toCurrencyCode') ?? 'KRW';
-  //     initialFromImage = prefs.getString('fromCurrencyFlag') ?? 'USD';
-  //     initialToImage = prefs.getString('toCurrencyFlag') ?? 'KRW';
-  //     _fromPriceController.text =
-  //         prefs.getString('fromCurrencyController') ?? '0';
-  //     _toPriceController.text = prefs.getString('toCurrencyController') ?? '0';
-  //   });
-  // }
-
-  Future<void> getCurrenciesByName() async {
-    List<Currency> currencies = await currencyServices.getAllCurrencies();
+  void toggleIsDownloaded() {
     setState(() {
-      currencyCodes = currencies.map((currency) => currency.code!).toList();
-      if (currencyCodes.isNotEmpty) {
-        dropDownValue_1 = currencyCodes.first;
-        dropDownValue_2 = currencyCodes[1];
-        // initialFromImage = 'assets/images/${currencyCodes.first}.png';
-        // initialToImage = 'assets/images/${currencyCodes[1]}.png';
-      }
+      isDownloaded = false;
     });
   }
 
-  void toggleSwitch() {
-    setState(() {
-      String? tempValue = dropDownValue_1;
-      dropDownValue_1 = dropDownValue_2;
-      dropDownValue_2 = tempValue;
+  void convertCurrency(double currency, double howMuch) {
+    _toPriceController.text = (currency * howMuch).toStringAsFixed(2);
+    setState(() {});
+  }
 
-      TextEditingController tempController = _fromPriceController;
-      _fromPriceController = _toPriceController;
-      _toPriceController = tempController;
+  Future<void> getCurrenciesByName() async {
+    currencies = await currencyServices.getAllCurrencies();
+    currencyCodes = currencies.map((currency) => currency.code!).toList();
+    if (currencyCodes.isNotEmpty) {
+      dropDownValue1 = currencyCodes.first;
+      saveString();
+      getString();
+    }
 
-      // saveInfo(initialFromImage, initialToImage, fromCurrencyCode,
-      //     toCurrencyCode, _fromPriceController.text, _toPriceController.text);
-    });
+    setState(() {});
+  }
+
+  void saveString() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('dropDownValue1', dropDownValue1!);
+  }
+
+  void getString() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    dropDownValue1 = prefs.getString('dropDownValue1');
+    setState(() {});
   }
 
   @override
@@ -127,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(20)),
               child: Column(
                 children: [
+                  // if (isDownloaded)
                   FutureBuilder(
                     future: currencyServices.getAllCurrencies(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -148,6 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
 
                       final List<Currency> generalCurrency = snapshot.data;
+                      // toggleIsDownloaded();
                       return Column(
                         children: [
                           Column(
@@ -167,20 +149,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   DropdownButton<String>(
                                     icon: const Icon(Icons.expand_more),
-                                    value: dropDownValue_1,
+                                    value: dropDownValue1,
                                     style: const TextStyle(
                                         color: Color(0xFF26278D),
                                         fontWeight: FontWeight.w600,
                                         fontSize: 18),
                                     onChanged: (String? value) {
                                       setState(() {
-                                        dropDownValue_1 = value;
+                                        dropDownValue1 = value;
                                         fromCurrencyCode = value!;
+                                        saveString();
                                       });
                                     },
                                     elevation: 16,
                                     underline: Container(),
                                     items: generalCurrency.map((currency) {
+                                      convertCurToUzs = currency.cbPrice!;
                                       initialFromImage =
                                           'assets/images/${currency.code!}.png';
                                       return DropdownMenuItem<String>(
@@ -211,13 +195,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                     width: 150,
                                     height: 50,
                                     child: Form(
-                                      key: formKey_1,
+                                      key: formKey1,
                                       child: TextFormField(
                                         keyboardType: TextInputType.number,
                                         controller: _fromPriceController,
                                         decoration: const InputDecoration(
-                                            hintText: '0',
+                                            hintText: '0.0',
                                             border: OutlineInputBorder()),
+                                        onChanged: (value) {
+                                          if (_fromPriceController
+                                              .text.isNotEmpty) {
+                                            final double howMuch =
+                                                double.tryParse(
+                                                        _fromPriceController
+                                                            .text) ??
+                                                    0.0;
+
+                                            convertCurrency(
+                                                double.parse(convertCurToUzs),
+                                                howMuch);
+                                          }
+                                        },
                                       ),
                                     ),
                                   )
@@ -225,28 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
-                          Stack(
-                            clipBehavior: Clip.none,
-                            alignment: Alignment.center,
-                            children: [
-                              const Divider(),
-                              Positioned(
-                                child: InkWell(
-                                  onTap: toggleSwitch,
-                                  child: CircleAvatar(
-                                    backgroundColor: const Color(0xFF26278D),
-                                    child: Icon(
-                                      Icons.change_circle,
-                                      color: Colors.white,
-                                      size: 35.h,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 20),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -262,58 +239,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  DropdownButton<String>(
-                                    icon: const Icon(Icons.expand_more),
-                                    value: dropDownValue_2,
-                                    style: const TextStyle(
-                                        color: Color(0xFF26278D),
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18),
-                                    onChanged: (String? value) {
-                                      setState(() {
-                                        dropDownValue_2 = value;
-                                        toCurrencyCode = value!;
-                                      });
-                                    },
-                                    elevation: 16,
-                                    underline: Container(),
-                                    items: generalCurrency.map((currency) {
-                                      initialToImage =
-                                          'assets/images/${currency.code!}';
-                                      return DropdownMenuItem<String>(
-                                        value: currency.code,
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              clipBehavior: Clip.hardEdge,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              child: Image.asset(
-                                                'assets/images/$initialFromImage.png',
-                                                width: 30,
-                                                height: 30,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 20),
-                                            Text(currency.code!),
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
                                   SizedBox(
-                                    width: 150,
-                                    height: 50,
+                                    width: 380.w,
+                                    height: 50.h,
                                     child: Form(
-                                      key: formKey_2,
-                                      child: TextFormField(
+                                      child: TextField(
+                                        readOnly: true,
                                         keyboardType: TextInputType.number,
                                         controller: _toPriceController,
                                         decoration: const InputDecoration(
-                                            hintText: '0',
+                                            hintText: '0.0',
                                             border: OutlineInputBorder()),
                                       ),
                                     ),
@@ -333,8 +268,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           SizedBox(
                             height: 10.h,
                           ),
-                          Text(
-                              '${_fromPriceController.text} $fromCurrencyCode = ${_toPriceController.text} $toCurrencyCode')
+                          if (_fromPriceController.text.isNotEmpty ||
+                              _toPriceController.text.isNotEmpty)
+                            Text(
+                                '${_fromPriceController.text} $fromCurrencyCode = ${_toPriceController.text} UZS'),
                         ],
                       );
                     },

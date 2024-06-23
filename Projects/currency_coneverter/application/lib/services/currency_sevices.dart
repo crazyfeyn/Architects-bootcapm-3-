@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 
 class CurrencyServices {
   Future<Currency?> getCurrency(String code) async {
-    print('---------');
     Uri url = Uri.parse("https://nbu.uz/uz/exchange-rates/json/");
     final response = await http.get(url);
     final data = jsonDecode(response.body);
@@ -19,7 +18,6 @@ class CurrencyServices {
     } else {
       throw Exception('error');
     }
-    
 
     return null;
   }
