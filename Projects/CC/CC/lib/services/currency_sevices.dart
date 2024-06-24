@@ -22,6 +22,7 @@ class CurrencyServices {
     return null;
   }
 
+
   Future<List<Currency>> getAllCurrencies() async {
     Uri url = Uri.parse("https://nbu.uz/uz/exchange-rates/json/");
     final response = await http.get(url);
